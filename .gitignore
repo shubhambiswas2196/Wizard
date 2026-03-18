@@ -1,0 +1,22 @@
+# Python / Django
+__pycache__/
+*.py[cod]
+*.log
+venv/
+
+# Environment files (keep the templates)
+.env
+.env.*
+!.env.example
+!frontend/.env.local.example
+
+# Node / Next.js
+frontend/node_modules/
+frontend/.next/
+frontend/.env
+frontend/.env.*
+npm-debug.log*
+
+# Editors / OS
+.vscode/
+.DS_Store
