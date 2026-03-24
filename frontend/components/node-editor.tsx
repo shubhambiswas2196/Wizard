@@ -5,7 +5,6 @@ import ReactFlow, {
   addEdge, 
   Background, 
   Controls, 
-  MiniMap, 
   applyEdgeChanges, 
   applyNodeChanges,
   Node,
@@ -18,7 +17,11 @@ import ReactFlow, {
   Handle,
   Position,
   MarkerType,
-  useReactFlow
+  useReactFlow,
+  EdgeProps,
+  getBezierPath,
+  EdgeLabelRenderer,
+  BaseEdge, 
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 
@@ -39,89 +42,193 @@ type MetaCampaign = {
   clicks?: number;
 };
 
+// --- Custom Edge with Plus Button ---
+
+const CustomEdge = ({
+  id,
+  sourceX,
+  sourceY,
+  targetX,
+  targetY,
+  sourcePosition,
+  targetPosition,
+  style = {},
+  markerEnd,
+}: EdgeProps) => {
+  const { setEdges } = useReactFlow();
+  const [edgePath, labelX, labelY] = getBezierPath({
+    sourceX,
+    sourceY,
+    sourcePosition,
+    targetX,
+    targetY,
+    targetPosition,
+  });
+
+  return (
+    <>
+      <BaseEdge path={edgePath} markerEnd={markerEnd} style={{ ...style, stroke: '#94a3b8', strokeWidth: 1.5 }} />
+      <EdgeLabelRenderer>
+        <div
+          style={{
+            position: 'absolute',
+            transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
+            fontSize: 12,
+            pointerEvents: 'all',
+            display: 'flex',
+            gap: '8px'
+          }}
+          className="nodrag nopan"
+        >
+          <button 
+            style={{ 
+              width: 20, 
+              height: 20, 
+              background: '#fff', 
+              border: '1px solid #e2e8f0', 
+              borderRadius: '50%', 
+              color: '#6366f1', 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center', 
+              cursor: 'pointer',
+              fontWeight: 'bold',
+              boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+            }}
+            onClick={(event) => {
+              event.stopPropagation();
+              console.log(`Add node at edge ${id}`);
+            }}
+            title="Add module"
+          >
+            +
+          </button>
+          <button 
+            style={{ 
+              width: 20, 
+              height: 20, 
+              background: '#fff', 
+              border: '1px solid #e2e8f0', 
+              borderRadius: '50%', 
+              color: '#94a3b8', 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center', 
+              cursor: 'pointer',
+              fontSize: '14px',
+              boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+            }}
+            onClick={(event) => {
+              event.stopPropagation();
+              setEdges((eds) => eds.filter((e) => e.id !== id));
+            }}
+            title="Delete connection"
+          >
+            ×
+          </button>
+        </div>
+      </EdgeLabelRenderer>
+    </>
+  );
+};
+
 // --- Custom Node Components with Enterprise Aesthetic ---
 
-const MagicNodeWrapper = ({ children, selected, title, icon, category, color, id }: any) => {
+const MagicNodeWrapper = ({ children, selected, title, icon, category, color, id, data }: any) => {
   const { setNodes } = useReactFlow();
   
   const onDelete = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
-    setNodes((nds) => nds.filter((node) => node.id !== id));
-  }, [id, setNodes]);
+    if (data?.onDelete) {
+      data.onDelete(id);
+    }
+  }, [id, data]);
 
   const accentColor = color || '#2563eb';
 
   return (
     <div className={`enterprise-node ${selected ? 'selected' : ''}`} style={{ 
-      minWidth: '220px', 
+      minWidth: '240px', 
       background: '#fff',
-      border: `1px solid ${selected ? accentColor : '#e2e8f0'}`,
-      borderRadius: '16px',
-      boxShadow: selected ? `0 0 0 1px ${accentColor}, 0 10px 15px -3px rgba(0,0,0,0.1)` : '0 4px 6px -1px rgba(0,0,0,0.05)',
-      transition: 'all 0.2s ease',
-      position: 'relative',
-      fontFamily: 'Montserrat, sans-serif'
+      border: `1px solid ${selected ? '#6366f1' : '#e2e8f0'}`,
+      borderRadius: '10px',
+      padding: '12px 14px',
+      boxShadow: selected ? '0 10px 15px -3px rgba(0, 0, 0, 0.1)' : '0 2px 5px rgba(0,0,0,0.03)',
+      transition: 'all 0.15s ease',
+      cursor: 'move',
+      position: 'relative'
     }}>
-      {/* Header Section */}
-      <div style={{ 
-        padding: '12px 16px', 
-        display: 'flex', 
-        alignItems: 'center', 
-        justifyContent: 'space-between',
-        borderBottom: '1px solid #f1f5f9',
-        borderTopLeftRadius: '16px',
-        borderTopRightRadius: '16px'
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          {/* App Badge (Simplified) */}
           <div style={{ 
-            width: '28px', 
-            height: '28px', 
-            background: `${accentColor}15`, 
-            borderRadius: '8px', 
             display: 'flex', 
             alignItems: 'center', 
-            justifyContent: 'center',
-            color: accentColor,
-            fontSize: '1rem'
-          }}>
-            {icon}
-          </div>
-          <span style={{ fontWeight: '700', fontSize: '0.9rem', color: '#1e293b' }}>{title}</span>
-        </div>
-        
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span style={{ 
+            gap: 6, 
             padding: '2px 8px', 
-            background: '#f1f5f9', 
-            borderRadius: '99px', 
-            fontSize: '0.65rem', 
-            fontWeight: '600', 
-            color: '#64748b',
-            textTransform: 'capitalize'
-          }}>{category}</span>
-          
-          <button 
-            onClick={onDelete}
-            style={{
-              background: 'transparent',
-              border: 'none',
+            borderRadius: '4px', 
+            border: `1px solid ${accentColor === '#faad14' ? '#e2e8f0' : `${accentColor}40`}`,
+            background: 'transparent',
+            fontSize: '0.75rem',
+            fontWeight: 600,
+            color: accentColor === '#faad14' ? '#64748b' : accentColor
+          }}>
+            <span style={{ fontSize: '0.9rem' }}>{icon}</span>
+            <span>{category}</span>
+          </div>
+
+          {/* Optional Timer Badge (Simplified) */}
+          {data.timer && (
+            <div style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: 4, 
               color: '#94a3b8',
-              cursor: 'pointer',
-              fontSize: '1.2rem',
-              padding: '0 4px',
-              display: 'flex',
-              alignItems: 'center',
-              lineHeight: 1
-            }}
-            title="Delete node"
-          >
-            ×
-          </button>
+              fontSize: '0.75rem',
+              fontWeight: 500
+            }}>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+              {data.timer}
+            </div>
+          )}
+        </div>
+
+        {/* Delete Icon (replaced ellipsis) */}
+        <div 
+          style={{ 
+            color: '#94a3b8', 
+            cursor: 'pointer', 
+            fontSize: '18px', 
+            lineHeight: 1,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '20px',
+            height: '20px'
+          }} 
+          onClick={onDelete}
+          title="Delete node"
+        >
+          ×
         </div>
       </div>
 
-      {/* Body Section */}
-      <div style={{ padding: '16px', fontSize: '0.8rem', color: '#64748b', fontWeight: '500', lineHeight: 1.5 }}>
+      {/* Body: Number and Title */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+        <div style={{ fontSize: '0.9rem', color: '#1e293b', fontWeight: 600 }}>
+          {data.index ? `${data.index}. ` : ''}{data.label || title}
+        </div>
+        {data.subtext && (
+          <div style={{ fontSize: '0.8rem', color: '#94a3b8', fontWeight: 500 }}>
+            {data.subtext}
+          </div>
+        )}
+      </div>
+
+      <div style={{ marginTop: 8 }}>
         {children}
       </div>
     </div>
@@ -133,75 +240,59 @@ const handleStyle = {
   width: '10px', 
   height: '10px', 
   background: '#fff', 
-  border: '2px solid #3b82f6',
+  border: '2px solid #6366f1',
   boxShadow: '0 0 0 2px #fff'
 };
 
-const FormulaNode = ({ data, selected, id }: any) => (
-  <MagicNodeWrapper selected={selected} title="Formula" icon="fx" category="Calculations" color="#3b82f6" id={id}>
+const TriggerNode = ({ data, selected, id }: any) => (
+  <MagicNodeWrapper selected={selected} title="Trigger" icon="▶" category="Entry" color="#ef4444" id={id} data={data}>
     <Handle type="source" position={Position.Bottom} style={handleStyle} />
-    {data.label || "Calculate PQL status."}
+  </MagicNodeWrapper>
+);
+
+const FormulaNode = ({ data, selected, id }: any) => (
+  <MagicNodeWrapper selected={selected} title="Formula" icon="fx" category="Calculations" color="#3b82f6" id={id} data={data}>
+    <Handle type="source" position={Position.Bottom} style={handleStyle} />
   </MagicNodeWrapper>
 );
 
 const SwitchNode = ({ data, selected, id }: any) => (
-  <MagicNodeWrapper selected={selected} title="Switch" icon="⇌" category="Conditions" color="#3b82f6" id={id}>
+  <MagicNodeWrapper selected={selected} title="Switch" icon="⇌" category="Conditions" color="#3b82f6" id={id} data={data}>
     <Handle type="target" position={Position.Top} style={handleStyle} />
     <Handle type="source" position={Position.Bottom} style={handleStyle} />
-    {data.label || "Route to upsell or nurture."}
   </MagicNodeWrapper>
 );
 
 const ActionModuleNode = ({ data, selected, id }: any) => (
-  <MagicNodeWrapper selected={selected} title="Add to sequence" icon="⚡" category="MixMax" color="#3b82f6" id={id}>
+  <MagicNodeWrapper selected={selected} title="Add to sequence" icon="⚡" category="MixMax" color="#3b82f6" id={id} data={data}>
     <Handle type="target" position={Position.Top} style={handleStyle} />
     <Handle type="source" position={Position.Bottom} style={handleStyle} />
-    {data.label || "Add to 'Power user upsell' campaign"}
   </MagicNodeWrapper>
 );
 
-const MetaAccountNode = ({ data, selected, id }: any) => {
-  const meta = data.meta || {};
-  return (
-    <MagicNodeWrapper selected={selected} title="Meta Account" icon="A" category="Meta Ads" color="#0f766e" id={id}>
+const MetaAccountNode = ({ data, selected, id }: any) => (
+  <MagicNodeWrapper selected={selected} title="Meta Account" icon="A" category="Meta Ads" color="#0f766e" id={id} data={data}>
       <Handle type="target" position={Position.Top} style={handleStyle} />
       <Handle type="source" position={Position.Bottom} style={handleStyle} />
-      <div style={{ fontWeight: 700, color: '#0f172a', marginBottom: 4 }}>{data.label || meta.accountName || 'Account'}</div>
-      <div style={{ fontSize: '0.75rem', color: '#475569' }}>ID: {meta.accountId}</div>
-      <div style={{ fontSize: '0.75rem', color: '#475569' }}>Currency: {meta.currency || '—'}</div>
-    </MagicNodeWrapper>
-  );
-};
+  </MagicNodeWrapper>
+);
 
-const MetaCampaignNode = ({ data, selected, id }: any) => {
-  const meta = data.meta || {};
-  return (
-    <MagicNodeWrapper selected={selected} title="Meta Campaign" icon="C" category="Meta Ads" color="#2563eb" id={id}>
-      <Handle type="target" position={Position.Top} style={handleStyle} />
-      <Handle type="source" position={Position.Bottom} style={handleStyle} />
-      <div style={{ fontWeight: 700, color: '#0f172a', marginBottom: 4 }}>{data.label || meta.campaignName || 'Campaign'}</div>
-      <div style={{ fontSize: '0.75rem', color: '#475569' }}>ID: {meta.campaignId}</div>
-      <div style={{ fontSize: '0.75rem', color: '#475569' }}>Status: {(meta.status || '').toLowerCase()}</div>
-      {meta.spend !== undefined && (
-        <div style={{ fontSize: '0.75rem', color: '#16a34a', fontWeight: 700 }}>Spend: ${meta.spend}</div>
-      )}
-    </MagicNodeWrapper>
-  );
-};
+const MetaCampaignNode = ({ data, selected, id }: any) => (
+  <MagicNodeWrapper selected={selected} title="Meta Campaign" icon="C" category="Meta Ads" color="#2563eb" id={id} data={data}>
+    <Handle type="target" position={Position.Top} style={handleStyle} />
+    <Handle type="source" position={Position.Bottom} style={handleStyle} />
+  </MagicNodeWrapper>
+);
 
-const MetaMetricNode = ({ data, selected, id }: any) => {
-  const meta = data.meta || {};
-  return (
-    <MagicNodeWrapper selected={selected} title="Campaign Metric" icon="Σ" category="Meta Ads" color="#7c3aed" id={id}>
-      <Handle type="target" position={Position.Top} style={handleStyle} />
-      <Handle type="source" position={Position.Bottom} style={handleStyle} />
-      <div style={{ fontWeight: 700, color: '#0f172a', marginBottom: 4 }}>{meta.metric || 'spend'} {meta.operator || '>'} {meta.value ?? 0}</div>
-      <div style={{ fontSize: '0.75rem', color: '#475569' }}>Campaign: {meta.campaignName || meta.campaignId || 'unset'}</div>
-    </MagicNodeWrapper>
-  );
-};
+const MetaMetricNode = ({ data, selected, id }: any) => (
+  <MagicNodeWrapper selected={selected} title="Campaign Metric" icon="Σ" category="Meta Ads" color="#7c3aed" id={id} data={data}>
+    <Handle type="target" position={Position.Top} style={handleStyle} />
+    <Handle type="source" position={Position.Bottom} style={handleStyle} />
+  </MagicNodeWrapper>
+);
 
 const nodeTypes = {
+  trigger: TriggerNode,
   formula: FormulaNode,
   switch: SwitchNode,
   actionModule: ActionModuleNode,
@@ -210,25 +301,36 @@ const nodeTypes = {
   metaMetric: MetaMetricNode,
 };
 
+const edgeTypes = {
+  addButton: CustomEdge,
+};
+
 // --- End Custom Node Components ---
 
 const initialNodes: Node[] = [
   {
     id: '1',
-    type: 'formula',
-    data: { label: 'Calculate PQL status.' },
+    type: 'trigger',
+    data: { label: 'New Lead Form Entry', index: 1, category: 'Google Ads', timer: '15 min' },
     position: { x: 400, y: 50 },
   },
   {
     id: '2',
-    type: 'switch',
-    data: { label: 'Route to upsell or nurture.' },
-    position: { x: 400, y: 200 },
+    type: 'actionModule',
+    data: { label: 'Create Spreadsheet Row', index: 2, category: 'Google Sheets (2.10.2)' },
+    position: { x: 400, y: 300 },
+  },
+  {
+    id: '3',
+    type: 'actionModule',
+    data: { label: 'Select the event', index: 3, category: 'Zapier Lead Router', subtext: 'Select the event', color: '#f97316' },
+    position: { x: 400, y: 550 },
   },
 ];
 
 const initialEdges: Edge[] = [
-    { id: 'e1-2', source: '1', target: '2', animated: false, type: 'smoothstep' }
+    { id: 'e1-2', source: '1', target: '2', type: 'addButton' },
+    { id: 'e2-3', source: '2', target: '3', type: 'addButton' }
 ];
 
 let idCount = 100;
@@ -239,6 +341,11 @@ const NodeEditor = () => {
   const { setNodes: setFlowNodes, getNodes, getEdges } = useReactFlow();
   const [nodes, setNodes] = useState<Node[]>(initialNodes);
   const [edges, setEdges] = useState<Edge[]>(initialEdges);
+
+  const deleteNode = useCallback((id: string) => {
+    setNodes((nds) => nds.filter((n) => n.id !== id));
+  }, []);
+
   const [reactFlowInstance, setReactFlowInstance] = useState<any>(null);
   const [workflowId, setWorkflowId] = useState<number | null>(null);
   const [isSaving, setIsSaving] = useState(false);
@@ -270,7 +377,11 @@ const NodeEditor = () => {
           const wf = workflows[0];
           setWorkflowId(wf.id);
           if (wf.nodes?.length > 0) {
-              setNodes(wf.nodes);
+              const mappedNodes = wf.nodes.map((n: any) => ({
+                ...n,
+                data: { ...n.data, onDelete: deleteNode }
+              }));
+              setNodes(mappedNodes);
               setEdges(wf.edges || []);
           }
         } else {
@@ -381,6 +492,7 @@ const NodeEditor = () => {
       });
 
       const labelMap: Record<string, string> = {
+        trigger: 'New Trigger',
         formula: 'Calculate logic',
         switch: 'Route data',
         actionModule: 'Execute task',
@@ -393,12 +505,18 @@ const NodeEditor = () => {
         id: getId(),
         type,
         position,
-        data: { label: labelMap[type] || 'New Module', ...metaPayload },
+        data: { 
+          label: labelMap[type] || 'New Module', 
+          index: getNodes().length + 1,
+          subtext: type === 'actionModule' ? 'Select the event' : '',
+          ...metaPayload, 
+          onDelete: deleteNode 
+        },
       };
 
       setNodes((nds) => nds.concat(newNode));
     },
-    [reactFlowInstance, getId]
+    [reactFlowInstance, getId, deleteNode, getNodes]
   );
 
   const handleKeyDown = useCallback((event: React.KeyboardEvent) => {
@@ -428,7 +546,7 @@ const NodeEditor = () => {
   }
 
   return (
-    <div style={{ height: '100%', width: '100%', display: 'flex', background: '#f8fafc' }}>
+    <div style={{ height: '100%', width: '100%', display: 'flex', background: '#F9F7F3' }}>
       <div style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
         <div
           ref={reactFlowWrapper}
@@ -446,7 +564,11 @@ const NodeEditor = () => {
             onDrop={onDrop}
             onDragOver={onDragOver}
             nodeTypes={nodeTypes}
-            defaultEdgeOptions={defaultEdgeOptions}
+            edgeTypes={edgeTypes}
+            defaultEdgeOptions={{ 
+              ...defaultEdgeOptions,
+              type: 'addButton'
+            }}
             fitView
           >
             <Background color="#cbd5e1" variant={'dots' as any} gap={30} size={1} />
@@ -461,21 +583,8 @@ const NodeEditor = () => {
                 borderRadius: '12px',
                 padding: '4px',
                 boxShadow: '0 4px 12px rgba(0,0,0,0.05)'
-            }} showInteractive={false} />
+            }} showInteractive={false} showZoom={true} />
             
-            <MiniMap 
-              style={{ 
-                right: 16, 
-                bottom: 16, 
-                background: '#fff', 
-                border: '1px solid #e2e8f0', 
-                borderRadius: '12px',
-                boxShadow: '0 4px 12px rgba(0,0,0,0.05)'
-              }}
-              nodeStrokeColor={(n: any) => '#3b82f6'}
-              nodeColor={() => '#f1f5f9'}
-              nodeBorderRadius={8}
-            />
 
             <Panel position="top-left">
               <button 
@@ -509,6 +618,7 @@ const NodeEditor = () => {
         }}>Modules</div>
         
         {[
+          { type: 'trigger', label: 'Trigger', icon: '▶', color: '#ef4444' },
           { type: 'formula', label: 'Formula', icon: 'fx', color: '#3b82f6' },
           { type: 'switch', label: 'Switch', icon: '⇌', color: '#3b82f6' },
           { type: 'actionModule', label: 'Module', icon: '⚡', color: '#3b82f6' }

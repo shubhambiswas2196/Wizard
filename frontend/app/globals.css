@@ -1,11 +1,11 @@
 /* Montserrat removed in favor of Outfit via next/font/google */
 
 :root {
-  --primary: #ff4d00;
-  --primary-strong: #e64500;
-  --primary-bg: #fff0eb;
-  --accent-orange: #ff7a45;
-  --accent-coral: #ff6b6b;
+  --primary: #CF203E;
+  --primary-strong: #a81a32;
+  --primary-bg: #fce9ec;
+  --accent-red: #e05a74;
+  --accent-rose: #e54b64;
   --success: #2ecc71;
   --bg: #fafaf9;
   --surface: #ffffff;
@@ -18,7 +18,7 @@
   --radius-md: 0px;
   --radius-lg: 0px;
   --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
-  --shadow-md: 0 12px 24px -10px rgba(255, 77, 0, 0.15);
+  --shadow-md: 0 12px 24px -10px rgba(207, 32, 62, 0.15);
   --glass-bg: rgba(255, 255, 255, 0.7);
   --glass-border: rgba(255, 255, 255, 0.4);
 }
@@ -52,9 +52,9 @@ i, .italic {
   left: 0;
   right: 0;
   bottom: 0;
-  background: radial-gradient(circle at 0% 0%, #fff5f0 0%, #fafaf9 50%),
-              radial-gradient(circle at 100% 100%, #fff0eb 0%, transparent 40%),
-              radial-gradient(circle at 80% 20%, #ffdfd6 0%, transparent 30%);
+  background: radial-gradient(circle at 0% 0%, #fdf2f4 0%, #fafaf9 50%),
+              radial-gradient(circle at 100% 100%, #fce9ec 0%, transparent 40%),
+              radial-gradient(circle at 80% 20%, #fad5da 0%, transparent 30%);
   z-index: -1;
 }
 
@@ -106,7 +106,7 @@ input {
 
 .app-frame {
   display: grid;
-  grid-template-columns: 80px 1fr;
+  grid-template-columns: 56px 1fr;
   min-height: 100vh;
 }
 
@@ -581,7 +581,7 @@ input {
 
 @media (max-width: 1024px) {
   .app-frame {
-    grid-template-columns: 80px 1fr;
+    grid-template-columns: 56px 1fr;
   }
   .side-panel span:not(.nav-icon) {
     display: none;

@@ -64,9 +64,6 @@ export function Sidebar() {
 
   return (
     <aside className="side-panel">
-      <div className="side-brand">
-        <div className="side-logo-box" title="Wizard">W</div>
-      </div>
       <nav className="nav-group">
         {navItems.map((item) => (
           <Link
