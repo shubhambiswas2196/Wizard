@@ -58,18 +58,21 @@ export function Sidebar({ user, orgName, avatarInitial }: SidebarProps) {
   return (
     <aside 
       className={cn(
-        "bg-white border-r border-slate-200 flex flex-col h-screen sticky top-0 transition-all duration-300 ease-in-out p-4",
-        isCollapsed ? "w-20" : "w-64"
+        "bg-[#0747A6] border-r border-[#0052CC]/20 flex flex-col h-screen sticky top-0 transition-all duration-300 ease-in-out p-3 text-white",
+        isCollapsed ? "w-16" : "w-64"
       )}
     >
-      <div className={cn("flex items-center gap-3 pb-8", isCollapsed ? "justify-center" : "px-2")}>
-        <div className="min-w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-green-500/20">
+      <div className={cn("flex items-center gap-3 pb-8 pt-2", isCollapsed ? "justify-center" : "px-3")}>
+        <div className="min-w-8 h-8 bg-white/20 rounded flex items-center justify-center text-white font-bold text-lg border border-white/10">
           W
         </div>
         {!isCollapsed && (
-          <span className="font-bold text-slate-800 text-lg whitespace-nowrap overflow-hidden">
-            Wizard CRM
-          </span>
+          <div className="flex flex-col">
+            <span className="font-bold text-white text-sm tracking-tight leading-tight">
+              Wizard CRM
+            </span>
+            <span className="text-[10px] text-white/60 font-medium tracking-wide">Sales Project</span>
+          </div>
         )}
       </div>
 
@@ -82,32 +85,32 @@ export function Sidebar({ user, orgName, avatarInitial }: SidebarProps) {
               key={item.name} 
               href={item.href} 
               className={cn(
-                "flex items-center gap-3 p-3 rounded-lg transition-colors font-medium text-sm",
+                "flex items-center gap-3 p-2.5 rounded transition-all font-semibold text-[13px]",
                 isActive 
-                  ? "bg-green-50 text-green-700" 
-                  : "text-slate-600 hover:bg-slate-50 hover:text-slate-900",
+                  ? "bg-white/20 text-white" 
+                  : "text-white/80 hover:bg-white/10 hover:text-white",
                 isCollapsed && "justify-center"
               )}
               title={isCollapsed ? item.name : ""}
             >
-              <Icon size={22} className={cn(isActive ? "text-green-600" : "text-slate-400")} />
+              <Icon size={18} className={cn(isActive ? "text-white" : "text-white/70")} />
               {!isCollapsed && <span>{item.name}</span>}
             </Link>
           );
         })}
       </nav>
 
-      <div className="pt-4 border-t border-slate-100 mt-auto">
+      <div className="pt-4 border-t border-white/10 mt-auto">
         <div className={cn("flex items-center gap-3 p-2", isCollapsed ? "justify-center" : "")}>
-          <Avatar className="w-9 h-9 ring-2 ring-slate-100">
-            <AvatarFallback className="bg-slate-800 text-white font-semibold">
+          <Avatar className="w-8 h-8 rounded-sm ring-1 ring-white/20">
+            <AvatarFallback className="bg-white/10 text-white text-xs font-bold rounded-sm uppercase">
               {avatarInitial}
             </AvatarFallback>
           </Avatar>
           {!isCollapsed && (
             <div className="flex flex-col overflow-hidden">
-              <span className="text-sm font-semibold text-slate-800 truncate">{user.first_name}</span>
-              <span className="text-xs text-slate-500 truncate">{orgName}</span>
+              <span className="text-[12px] font-bold text-white truncate">{user.first_name}</span>
+              <span className="text-[10px] text-white/50 truncate uppercase tracking-tighter">{orgName}</span>
             </div>
           )}
         </div>
@@ -115,9 +118,9 @@ export function Sidebar({ user, orgName, avatarInitial }: SidebarProps) {
         <Button 
           variant="ghost" 
           onClick={toggleSidebar}
-          className="w-full mt-3 flex items-center justify-center hover:bg-slate-100"
+          className="w-full mt-3 h-8 flex items-center justify-center hover:bg-white/10 text-white/50 hover:text-white rounded"
         >
-          {isCollapsed ? <ChevronRight size={22} /> : <ChevronLeft size={22} />}
+          {isCollapsed ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
         </Button>
       </div>
     </aside>

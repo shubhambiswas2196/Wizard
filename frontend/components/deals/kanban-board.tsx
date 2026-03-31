@@ -20,99 +20,62 @@ export function KanbanBoard({ deals }: { deals: any[] }) {
     return deals.filter((deal: any) => deal.stage === stageId);
   };
 
-  const calculateWeightedRevenue = (stageDeals: any[]) => {
-    return stageDeals.reduce((acc, deal) => {
-      const val = parseFloat(deal.value) || 0;
-      const prob = (deal.probability || 0) / 100;
-      return acc + (val * prob);
-    }, 0);
-  };
-
   const calculateTotalValue = (stageDeals: any[]) => {
     return stageDeals.reduce((acc, deal) => acc + (parseFloat(deal.value) || 0), 0);
   };
 
   return (
-    <div className="flex gap-4 overflow-x-auto pb-8 min-h-[600px] scrollbar-hide pt-4">
+    <div className="flex gap-3 overflow-x-auto pb-4 min-h-[600px] scrollbar-hide pt-2">
       {STAGES.map((stage) => {
         const stageDeals = getDealsByStage(stage.id);
         const totalValue = calculateTotalValue(stageDeals);
-        const weightedRevenue = calculateWeightedRevenue(stageDeals);
 
         return (
-          <div key={stage.id} className="min-w-[300px] w-[300px] flex flex-col gap-4">
-            <div className="flex flex-col gap-2 px-2">
+          <div key={stage.id} className="min-w-[280px] w-[280px] flex flex-col gap-3 bg-[#F4F5F7]/80 rounded p-2">
+            <div className="flex flex-col gap-1 px-1 py-1">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <Badge variant="outline" className={cn(
-                    "font-bold uppercase tracking-tight text-[10px] px-2",
-                    stage.id === 'PROSPECTING' && "bg-slate-50 text-slate-600 border-slate-200",
-                    stage.id === 'QUALIFICATION' && "bg-blue-50 text-blue-600 border-blue-200",
-                    stage.id === 'PROPOSAL' && "bg-purple-50 text-purple-600 border-purple-200",
-                    stage.id === 'NEGOTIATION' && "bg-orange-50 text-orange-600 border-orange-200",
-                    stage.id === 'CLOSING' && "bg-green-50 text-green-600 border-green-200",
-                  )}>
+                  <h3 className="text-[12px] font-bold text-[#44546F] uppercase tracking-wider">
                     {stage.label}
-                  </Badge>
-                  <span className="text-xs font-bold text-slate-400">{stageDeals.length}</span>
+                  </h3>
+                  <span className="bg-slate-200 text-slate-700 text-[10px] font-bold px-1.5 py-0.5 rounded-full">
+                    {stageDeals.length}
+                  </span>
                 </div>
-                <button className="h-6 w-6 rounded-md hover:bg-slate-100 flex items-center justify-center text-slate-400">
-                  <Plus size={14} />
-                </button>
-              </div>
-              
-              <div className="flex items-center justify-between">
-                <div className="text-xs font-bold text-slate-400 uppercase tracking-tighter">Forecast</div>
-                <div className="text-sm font-black text-slate-900">${weightedRevenue.toLocaleString()}</div>
-              </div>
-              <div className="h-1 bg-slate-100 rounded-full overflow-hidden">
-                <div className={cn(
-                   "h-full rounded-full bg-slate-400 transition-all duration-1000",
-                   stage.id === 'QUALIFICATION' && "bg-blue-400",
-                   stage.id === 'PROPOSAL' && "bg-purple-400",
-                   stage.id === 'NEGOTIATION' && "bg-orange-400",
-                   stage.id === 'CLOSING' && "bg-green-400",
-                )} style={{ width: `${(weightedRevenue / (totalValue || 1)) * 100}%` }} />
               </div>
             </div>
 
-            <div className="flex-1 flex flex-col gap-3">
+            <div className="flex-1 flex flex-col gap-2">
               {stageDeals.map((deal: any) => (
                 <Link key={deal.id} href={`/dashboard/deals/${deal.id}`}>
-                  <Card className="border-slate-200 shadow-sm hover:shadow-md hover:border-slate-300 transition-all overflow-hidden group">
-                    <CardContent className="p-4">
-                      <div className="flex justify-between items-start mb-2">
-                         <h4 className="font-bold text-slate-900 text-sm group-hover:text-green-600 transition-colors line-clamp-1">{deal.name}</h4>
-                         <button className="h-6 w-6 rounded-md hover:bg-slate-50 flex items-center justify-center text-slate-300 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <MoreHorizontal size={14} />
-                         </button>
-                      </div>
-                      
-                      <div className="text-[11px] font-medium text-slate-400 mb-4">{deal.lead_name}</div>
-                      
-                      <div className="flex flex-col gap-3">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-1.5 text-slate-900 font-extrabold text-sm">
-                            <DollarSign size={14} className="text-slate-400" />
-                            {parseFloat(deal.value).toLocaleString()}
-                          </div>
-                          <div className="flex items-center gap-1.5 text-green-600 font-bold text-[10px] bg-green-50 px-2 py-0.5 rounded-full">
-                            <Target size={12} />
-                            {deal.probability}%
-                          </div>
-                        </div>
-
-                        <Separator className="bg-slate-100" />
-                        
-                        <div className="flex items-center justify-between text-[10px] font-bold text-slate-400 uppercase tracking-tight">
-                           <div className="flex items-center gap-1">
-                              <Calendar size={12} />
-                              {deal.expected_close_date ? new Date(deal.expected_close_date).toLocaleDateString() : 'NO DATE'}
-                           </div>
-                           <Badge variant="secondary" className="h-4 px-1.5 text-[9px] bg-slate-100 text-slate-500 font-bold border-0">
-                              {deal.status}
-                           </Badge>
-                        </div>
+                  <Card className="border-slate-200 shadow-sm hover:bg-[#F4F5F7] transition-all rounded-[3px] border-[1px] group">
+                    <CardContent className="p-3">
+                      <div className="space-y-3">
+                         <div className="flex justify-between items-start">
+                            <h4 className="text-[13px] font-medium text-[#172B4D] leading-snug group-hover:text-[#0052CC] transition-colors">{deal.name}</h4>
+                         </div>
+                         
+                         <div className="flex items-center justify-between mt-auto pt-2">
+                            <div className="flex flex-col">
+                               <div className="text-[11px] font-bold text-[#44546F] uppercase tracking-tighter">
+                                  #{String(deal.id).slice(0, 5)}
+                               </div>
+                               <div className="text-[12px] font-black text-[#172B4D]">${parseFloat(deal.value).toLocaleString()}</div>
+                            </div>
+                            
+                            <div className="flex items-center gap-2">
+                               <div className={cn(
+                                 "text-[10px] font-bold px-1.5 py-0.5 rounded-[3px]",
+                                 deal.probability > 70 ? "bg-green-100 text-green-700" :
+                                 deal.probability > 40 ? "bg-blue-100 text-blue-700" : "bg-slate-100 text-slate-600"
+                               )}>
+                                 {deal.probability}%
+                               </div>
+                               <div className="h-6 w-6 bg-slate-200 rounded-full flex items-center justify-center text-[10px] font-bold text-slate-600 border border-white">
+                                  {deal.lead_name?.[0] || 'U'}
+                               </div>
+                            </div>
+                         </div>
                       </div>
                     </CardContent>
                   </Card>
@@ -120,10 +83,15 @@ export function KanbanBoard({ deals }: { deals: any[] }) {
               ))}
               
               {stageDeals.length === 0 && (
-                <div className="h-24 border-2 border-dashed border-slate-100 rounded-3xl flex items-center justify-center text-[10px] font-bold text-slate-300 uppercase tracking-widest">
-                  EMPTY STAGE
+                <div className="h-16 border-2 border-dashed border-slate-200 rounded flex items-center justify-center text-[10px] font-bold text-slate-400 uppercase tracking-widest bg-white/50">
+                  NO DEALS
                 </div>
               )}
+              
+              <button className="mt-2 w-full py-2 flex items-center justify-center gap-2 text-slate-500 hover:bg-slate-200/50 rounded transition-colors text-[12px] font-semibold">
+                 <Plus size={14} />
+                 Create
+              </button>
             </div>
           </div>
         );

@@ -16,6 +16,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { cn } from "@/lib/utils";
 
 export function LeadQuickView() {
   const searchParams = useSearchParams();
@@ -60,105 +61,107 @@ export function LeadQuickView() {
             <Loader2 className="h-8 w-8 animate-spin text-green-500" />
           </div>
         ) : lead ? (
-          <div className="flex-1 overflow-y-auto flex flex-col relative">
-            <SheetHeader className="p-8 pb-6 border-b border-slate-100 bg-slate-50/50 sticky top-0 z-10 backdrop-blur-xl pr-14">
-              <div className="flex items-start justify-between">
-                <div>
-                  <SheetTitle className="text-2xl font-black text-slate-900 pr-2">{lead.name}</SheetTitle>
-                  <SheetDescription className="sr-only">
-                    Profile details and information for {lead.name}.
-                  </SheetDescription>
-                  <div className="mt-2 flex items-center gap-2">
-                    <Badge variant="outline" className="bg-white text-slate-600 font-bold border-slate-200">
-                      {lead.status}
-                    </Badge>
-                    <span className="text-slate-400 font-medium text-sm flex items-center gap-1">
-                      <Clock size={12} />
-                      Created {new Date(lead.created_at).toLocaleDateString()}
-                    </span>
+          <div className="flex-1 overflow-y-auto flex flex-col relative bg-white">
+            <SheetHeader className="p-6 pb-4 border-b border-slate-200 bg-[#F4F5F7] sticky top-0 z-10 pr-14">
+              <div className="flex flex-col gap-1">
+                <nav className="flex items-center gap-1 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                  <span>Leads</span>
+                  <span>/</span>
+                  <span>#{String(lead.id).slice(0, 8)}</span>
+                </nav>
+                <div className="flex items-start justify-between">
+                  <div>
+                    <SheetTitle className="text-xl font-semibold text-[#172B4D] pr-2 mt-1">{lead.name}</SheetTitle>
+                    <SheetDescription className="sr-only">
+                      Profile details and information for {lead.name}.
+                    </SheetDescription>
                   </div>
                 </div>
               </div>
             </SheetHeader>
             
-            <div className="p-8 space-y-8">
-              <div className="space-y-4">
-                <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-400">Contact Information</h4>
-                <div className="bg-slate-50 rounded-3xl p-6 space-y-4 border border-slate-100">
-                  <div className="flex items-center gap-4">
-                    <div className="h-10 w-10 bg-white rounded-xl shadow-sm flex items-center justify-center text-slate-500">
-                      <Mail size={18} />
-                    </div>
-                    <div>
-                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Email Address</p>
-                      <p className="font-semibold text-slate-900">{lead.email}</p>
-                    </div>
-                  </div>
-                  <Separator className="bg-slate-200/60" />
-                  <div className="flex items-center gap-4">
-                    <div className="h-10 w-10 bg-white rounded-xl shadow-sm flex items-center justify-center text-slate-500">
-                      <Phone size={18} />
-                    </div>
-                    <div>
-                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Phone Number</p>
-                      <p className="font-semibold text-slate-900">{lead.phone || "Not provided"}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-400">Professional Details</h4>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-slate-50 rounded-3xl p-5 border border-slate-100 flex flex-col gap-2">
-                    <Building2 size={16} className="text-slate-400" />
-                    <div>
-                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Company</p>
-                      <p className="font-semibold text-slate-900">{lead.company || "Individual"}</p>
-                    </div>
-                  </div>
-                  <div className="bg-slate-50 rounded-3xl p-5 border border-slate-100 flex flex-col gap-2">
-                    <Calendar size={16} className="text-slate-400" />
-                    <div>
-                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Source</p>
-                      <p className="font-semibold text-slate-900">{lead.source}</p>
-                    </div>
-                  </div>
-                  <div className="bg-slate-50 rounded-3xl p-5 border border-slate-100 flex flex-col gap-2 col-span-2">
-                    <MapPin size={16} className="text-slate-400" />
-                    <div>
-                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Location</p>
-                      <p className="font-semibold text-slate-900">
-                        {lead.city && lead.country ? `${lead.city}, ${lead.country}` : lead.country || "Global"}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {Object.keys(lead.custom_fields || {}).length > 0 && (
+            <div className="flex flex-col lg:flex-row flex-1">
+              <div className="flex-1 p-6 space-y-6 border-r border-slate-100">
                 <div className="space-y-4">
-                  <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-400">Custom Attributes</h4>
-                  <div className="bg-slate-50 rounded-3xl p-6 border border-slate-100 space-y-4">
-                    {Object.entries(lead.custom_fields).map(([key, value]) => (
+                  <div className="flex items-center gap-2">
+                    <Button variant="secondary" size="sm" className="h-8 rounded-[3px] bg-slate-200 hover:bg-slate-300 text-[#172B4D] font-bold text-[12px]">
+                      <Edit size={14} className="mr-2" />
+                      Edit
+                    </Button>
+                    <Button variant="secondary" size="sm" className="h-8 rounded-[3px] bg-slate-200 hover:bg-slate-300 text-[#172B4D] font-bold text-[12px]">
+                      Convert to Deal
+                    </Button>
+                  </div>
+
+                  <div className="pt-4">
+                    <h4 className="text-[14px] font-bold text-[#172B4D] mb-2">Description</h4>
+                    <p className="text-[14px] text-slate-600 leading-relaxed">
+                      Lead captured from {lead.source} on {new Date(lead.created_at).toLocaleDateString()}. 
+                      Currently residing in {lead.city || 'an unspecified location'}, {lead.country || 'Global'}.
+                    </p>
+                  </div>
+
+                  <div className="pt-6">
+                    <h4 className="text-[14px] font-bold text-[#172B4D] mb-4">Contact Information</h4>
+                    <div className="grid grid-cols-1 gap-6">
+                      <div className="flex flex-col gap-1">
+                        <label className="text-[12px] font-bold text-[#44546F]">Email</label>
+                        <div className="text-[14px] text-[#0052CC] hover:underline cursor-pointer font-medium">{lead.email}</div>
+                      </div>
+                      <div className="flex flex-col gap-1">
+                        <label className="text-[12px] font-bold text-[#44546F]">Phone</label>
+                        <div className="text-[14px] text-[#172B4D] font-medium">{lead.phone || "None"}</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="w-full lg:w-72 bg-slate-50/50 p-6 space-y-8">
+                <div className="space-y-6">
+                  <h4 className="text-[12px] font-bold text-[#44546F] uppercase tracking-wider">Details</h4>
+                  
+                  <div className="space-y-4">
+                    <div className="flex flex-col gap-1">
+                      <label className="text-[12px] font-bold text-[#44546F]">Status</label>
+                      <Badge 
+                        className={cn(
+                          "w-fit font-bold py-1 px-2 shadow-none border-none text-[11px] rounded-[3px] uppercase",
+                          lead.status === 'NEW' ? "bg-slate-200 text-slate-700" : 
+                          lead.status === 'CONTACTED' ? "bg-blue-100 text-blue-700" :
+                          lead.status === 'QUALIFIED' ? "bg-green-100 text-green-700" : "bg-slate-100 text-slate-500"
+                        )}
+                      >
+                        {lead.status}
+                      </Badge>
+                    </div>
+
+                    <div className="flex flex-col gap-1">
+                      <label className="text-[12px] font-bold text-[#44546F]">Company</label>
+                      <div className="text-[13px] text-[#172B4D] font-semibold">{lead.company || "Individual"}</div>
+                    </div>
+
+                    <div className="flex flex-col gap-1">
+                      <label className="text-[12px] font-bold text-[#44546F]">Source</label>
+                      <div className="text-[13px] text-[#172B4D] font-semibold">{lead.source}</div>
+                    </div>
+
+                    {Object.entries(lead.custom_fields || {}).map(([key, value]) => (
                       <div key={key} className="flex flex-col gap-1">
-                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{key.replace(/_/g, ' ')}</p>
-                        <p className="font-semibold text-slate-900">{String(value)}</p>
+                        <label className="text-[12px] font-bold text-[#44546F] capitalize">{key.replace(/_/g, ' ')}</label>
+                        <div className="text-[13px] text-[#172B4D] font-semibold">{String(value)}</div>
                       </div>
                     ))}
                   </div>
-                </div>
-              )}
-            </div>
 
-            <div className="p-8 mt-auto bg-slate-50/50 border-t border-slate-100 flex gap-4">
-               <Button className="flex-1 rounded-2xl h-12 bg-slate-900 hover:bg-slate-800 text-white font-bold shadow-lg shadow-black/10">
-                 Convert to Deal
-               </Button>
-               <Button variant="outline" className="rounded-2xl h-12 px-6 font-bold border-slate-200">
-                 <Edit size={16} className="mr-2" />
-                 Edit Profile
-               </Button>
+                  <Separator className="bg-slate-200" />
+
+                  <div className="text-[11px] text-slate-400 font-medium space-y-1">
+                    <div>Created {new Date(lead.created_at).toLocaleString()}</div>
+                    <div>Updated {new Date(lead.updated_at || lead.created_at).toLocaleString()}</div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         ) : (

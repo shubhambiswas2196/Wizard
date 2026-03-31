@@ -41,20 +41,23 @@ export default async function DealsPage({
   const avgValue = deals.length > 0 ? totalValue / deals.length : 0;
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-500">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-           <Badge variant="outline" className="bg-green-50 text-green-700 border-green-100 font-medium mb-2 px-3 tracking-wide uppercase text-[10px]">
-              Revenue Pipeline
-           </Badge>
-           <h1 className="text-3xl font-bold tracking-tight text-slate-900">Sales Opportunities</h1>
-           <p className="text-slate-500 mt-1">Manage your enterprise deals and forecast revenue growth.</p>
-        </div>
-        <div className="flex items-center gap-3">
-           <div className="text-sm font-medium text-slate-500 bg-slate-100/50 px-4 py-2 rounded-2xl border border-slate-200">
-             {totalCount.toLocaleString()} Total Deals
-           </div>
-           <CreateDealDialog />
+    <div className="space-y-6 animate-in fade-in duration-500">
+      <div className="space-y-1">
+        <nav className="flex items-center gap-1 text-[11px] font-medium text-slate-500">
+          <Link href="/dashboard" className="hover:text-primary transition-colors">Projects</Link>
+          <span>/</span>
+          <Link href="/dashboard" className="hover:text-primary transition-colors">Wizard CRM</Link>
+          <span>/</span>
+          <span className="text-slate-900">Deals</span>
+        </nav>
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pt-1">
+          <h1 className="text-2xl font-semibold tracking-tight text-[#172B4D]">Deals Board</h1>
+          <div className="flex items-center gap-3">
+             <div className="text-[12px] font-medium text-slate-500 px-2 py-1 rounded bg-slate-100 uppercase tracking-tight">
+               {deals.length} deals in pipeline
+             </div>
+             <CreateDealDialog />
+          </div>
         </div>
       </div>
 
