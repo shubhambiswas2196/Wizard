@@ -15,7 +15,7 @@ import {
   Pie
 } from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Plus } from "lucide-react";
+import { IconPlus } from "@tabler/icons-react";
 
 const pipelineData = [
   { stage: 'Prospect', value: 45000, color: '#94a3b8' },

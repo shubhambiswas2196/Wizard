@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Plus, UserPlus, Loader2, AlertCircle, Info, Hash, Type, Calendar, CheckSquare } from "lucide-react";
+import { IconPlus, IconUserPlus, IconLoader2, IconAlertCircle, IconInfoCircle, IconHash, IconTypography, IconCalendar, IconCheckbox } from "@tabler/icons-react";
 import { 
   Dialog, 
   DialogContent, 
@@ -90,8 +90,8 @@ export function CreateLeadDialog() {
 
     const renderCustomField = (field: any) => {
         const id = `custom_${field.name}`;
-        const icon = field.field_type === 'NUMBER' ? <Hash size={14} /> : 
-                     field.field_type === 'DATE' ? <Calendar size={14} /> : <Type size={14} />;
+        const icon = field.field_type === 'NUMBER' ? <IconHash size={14} /> : 
+                     field.field_type === 'DATE' ? <IconCalendar size={14} /> : <IconTypography size={14} />;
 
         if (field.field_type === 'CHECKBOX') {
             return (
@@ -125,14 +125,14 @@ export function CreateLeadDialog() {
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
                 <Button className="rounded-2xl h-12 px-6 bg-green-600 hover:bg-green-700 font-bold shadow-lg shadow-green-600/20 gap-2">
-                    <Plus size={18} />
+                    <IconPlus size={18} />
                     Add Lead
                 </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[500px] rounded-3xl p-8 border-slate-100 shadow-2xl overflow-y-auto max-h-[90vh]">
                 <DialogHeader className="mb-4">
                     <div className="h-12 w-12 bg-green-50 rounded-2xl flex items-center justify-center text-green-600 mb-4 mx-auto">
-                       <UserPlus size={24} />
+                       <IconUserPlus size={24} />
                     </div>
                     <DialogTitle className="text-2xl font-bold text-center">Capture New Lead</DialogTitle>
                     <DialogDescription className="text-center text-slate-500 mt-2">
@@ -181,7 +181,7 @@ export function CreateLeadDialog() {
                     {customFieldDefs.length > 0 && (
                         <div className="pt-4 border-t border-slate-100 space-y-4">
                             <div className="flex items-center gap-2 text-xs font-bold text-slate-400 uppercase tracking-widest px-1">
-                                <Info size={14} className="text-purple-400" />
+                                <IconInfoCircle size={14} className="text-purple-400" />
                                 Custom Attributes
                             </div>
                             <div className="grid grid-cols-1 gap-4">
@@ -192,7 +192,7 @@ export function CreateLeadDialog() {
 
                     {error && (
                         <div className="p-3 bg-red-50 border border-red-100 text-red-600 rounded-2xl text-xs font-bold flex items-center gap-2 animate-in slide-in-from-top-2">
-                            <AlertCircle size={14} />
+                            <IconAlertCircle size={14} />
                             {error}
                         </div>
                     )}
@@ -205,7 +205,7 @@ export function CreateLeadDialog() {
                         >
                             {pending ? (
                                 <>
-                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                    <IconLoader2 className="mr-2 h-4 w-4 animate-spin" />
                                     Creating Record...
                                 </>
                             ) : "Save Lead Record"}
@@ -216,5 +216,3 @@ export function CreateLeadDialog() {
         </Dialog>
     );
 }
-
-import { AlertCircle as AlertCircleIcon } from "lucide-react";

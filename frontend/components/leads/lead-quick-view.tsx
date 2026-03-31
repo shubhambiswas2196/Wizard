@@ -10,9 +10,9 @@ import {
   SheetDescription 
 } from "@/components/ui/sheet";
 import { 
-  Mail, Phone, Building2, Calendar, Clock, 
-  MapPin, Loader2, Edit, Trash2, Globe
-} from "lucide-react";
+  IconMail, IconPhone, IconBuilding2, IconCalendar, IconClock, 
+  IconMapPin, IconLoader2, IconEdit, IconTrash, IconGlobe
+} from "@tabler/icons-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -58,7 +58,7 @@ export function LeadQuickView() {
         {loading ? (
           <div className="flex h-full flex-col items-center justify-center bg-slate-50/50">
             <SheetTitle className="sr-only">Loading lead details...</SheetTitle>
-            <Loader2 className="h-8 w-8 animate-spin text-green-500" />
+            <IconLoader2 className="h-8 w-8 animate-spin text-green-500" />
           </div>
         ) : lead ? (
           <div className="flex-1 overflow-y-auto flex flex-col relative bg-white">
@@ -85,7 +85,7 @@ export function LeadQuickView() {
                 <div className="space-y-4">
                   <div className="flex items-center gap-2">
                     <Button variant="secondary" size="sm" className="h-8 rounded-[3px] bg-slate-200 hover:bg-slate-300 text-[#172B4D] font-bold text-[12px]">
-                      <Edit size={14} className="mr-2" />
+                      <IconEdit size={14} className="mr-2" />
                       Edit
                     </Button>
                     <Button variant="secondary" size="sm" className="h-8 rounded-[3px] bg-slate-200 hover:bg-slate-300 text-[#172B4D] font-bold text-[12px]">

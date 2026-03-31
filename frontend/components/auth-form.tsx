@@ -4,8 +4,7 @@ import { FormEvent, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Loader2 } from "lucide-react";
+import { IconLoader2 } from "@tabler/icons-react";
 
 type Mode = "login" | "signup";
 
@@ -76,7 +75,7 @@ export function AuthForm({ mode }: Props) {
     const payload = Object.fromEntries(formData.entries());
     
     try {
-      const response = await fetch(`/api/auth/${mode}/`, { // Added trailing slash for Django
+      const response = await fetch(`/api/auth/${mode}/`, { 
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -93,7 +92,6 @@ export function AuthForm({ mode }: Props) {
       setMessage(data.message ?? "Success.");
       setPending(false);
       
-      // Delay redirect to show success message
       setTimeout(() => {
         router.push("/dashboard");
         router.refresh();
@@ -105,13 +103,13 @@ export function AuthForm({ mode }: Props) {
   }
 
   return (
-    <form ref={formRef} className="space-y-5" onSubmit={handleSubmit} autoComplete="off">
+    <form ref={formRef} className="space-y-6" onSubmit={handleSubmit} autoComplete="off">
       <div className="space-y-4">
         {fieldsByMode[mode].map((field) => (
-          <div className="space-y-2" key={field.name}>
+          <div className="space-y-1.5" key={field.name}>
             <label 
                htmlFor={field.name} 
-               className="text-sm font-semibold tracking-tight text-slate-700"
+               className="text-[11px] font-black uppercase tracking-widest text-slate-400"
             >
               {field.label}
             </label>
@@ -119,10 +117,10 @@ export function AuthForm({ mode }: Props) {
               id={field.name}
               name={field.name}
               type={field.type ?? "text"}
-              placeholder={`Enter your ${field.label.toLowerCase()}`}
+              placeholder={field.label}
               autoComplete={getAutoComplete(mode, field.name)}
               required
-              className="h-11 border-slate-200 focus:border-green-500 focus:ring-green-500 rounded-xl transition-all"
+              className="h-11 border-slate-200 focus:border-primary focus:ring-primary/20 rounded-xl transition-all font-medium text-slate-900 bg-white"
             />
           </div>
         ))}
@@ -131,29 +129,30 @@ export function AuthForm({ mode }: Props) {
       <Button 
         type="submit" 
         disabled={pending} 
-        className="w-full h-11 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl shadow-lg shadow-green-600/20 active:scale-[0.98] transition-all"
+        className="w-full h-12 bg-primary hover:bg-primary/90 text-white font-black rounded-xl shadow-lg shadow-primary/20 active:scale-[0.98] transition-all uppercase tracking-widest text-xs"
       >
         {pending ? (
           <span className="flex items-center gap-2">
             <Loader2 className="animate-spin" size={18} />
-            Please wait
+            Working...
           </span>
         ) : (
-          mode === "login" ? "Sign In" : "Create Account"
+          mode === "login" ? "Sign In" : "Get Started"
         )}
       </Button>
 
       {error && (
-        <div className="p-3 rounded-lg bg-red-50 border border-red-100 text-red-600 text-sm font-medium animate-in fade-in slide-in-from-top-1 duration-300">
+        <div className="p-4 rounded-xl bg-red-50 border border-red-100 text-red-600 text-[13px] font-bold animate-in fade-in slide-in-from-top-1 duration-300">
           {error}
         </div>
       )}
       
       {message && (
-        <div className="p-3 rounded-lg bg-green-50 border border-green-100 text-green-700 text-sm font-medium animate-in fade-in slide-in-from-top-1 duration-300">
+        <div className="p-4 rounded-xl bg-green-50 border border-green-100 text-green-700 text-[13px] font-bold animate-in fade-in slide-in-from-top-1 duration-300">
           {message}
         </div>
       )}
     </form>
   );
 }
+

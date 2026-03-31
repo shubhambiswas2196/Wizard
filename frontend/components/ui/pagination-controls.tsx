@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
 import Link from "next/link";
+import { Badge } from "@/components/ui/badge";
 
 interface PaginationControlsProps {
   currentPage: number;
@@ -30,7 +31,7 @@ export function PaginationControls({
           className={currentPage <= 1 ? "pointer-events-none opacity-50" : ""}
         >
           <Button variant="outline" size="sm" className="rounded-xl font-bold border-slate-200 h-9">
-            <ChevronLeft size={16} className="mr-1" />
+            <IconChevronLeft size={16} className="mr-1" />
             Previous
           </Button>
         </Link>
@@ -51,12 +52,10 @@ export function PaginationControls({
         >
           <Button variant="outline" size="sm" className="rounded-xl font-bold border-slate-200 h-9">
             Next
-            <ChevronRight size={16} className="ml-1" />
+            <IconChevronRight size={16} className="ml-1" />
           </Button>
         </Link>
       </div>
     </div>
   );
 }
-
-import { Badge } from "@/components/ui/badge";

@@ -2,71 +2,71 @@
 @plugin "tailwindcss-animate";
 
 @theme {
-  --color-background: hsl(0 0% 100%);
-  --color-foreground: hsl(218 54% 19.6%); /* Jira Squid Ink #172B4D equivalent */
+  --color-background: hsl(220 33% 98%); /* Freshsales sidebar/background #F4F5F7 */
+  --color-foreground: hsl(218 54% 19.6%); /* Squid Ink #172B4D */
   --color-card: hsl(0 0% 100%);
   --color-card-foreground: hsl(218 54% 19.6%);
   --color-popover: hsl(0 0% 100%);
   --color-popover-foreground: hsl(218 54% 19.6%);
-  --color-primary: hsl(216 100% 40%); /* Jira Blue #0052CC */
+  --color-primary: hsl(216 100% 40%); /* Atlassian/Jira Blue #0052CC */
   --color-primary-foreground: hsl(0 0% 100%);
-  --color-secondary: hsl(220 30% 96%); /* Jira Subtle Gray #F4F5F7 */
+  --color-secondary: hsl(218 20% 90%);
   --color-secondary-foreground: hsl(218 54% 19.6%);
   --color-muted: hsl(220 30% 96%);
   --color-muted-foreground: hsl(215 15% 45%);
-  --color-accent: hsl(214 100% 93%); /* Jira Accent Blue #DEEBFF */
+  --color-accent: hsl(214 100% 93%);
   --color-accent-foreground: hsl(216 100% 40%);
   --color-destructive: hsl(0 84.2% 60.2%);
   --color-destructive-foreground: hsl(210 20% 98%);
-  --color-border: hsl(218 20% 90%);
-  --color-input: hsl(218 20% 90%);
+  --color-border: hsl(210 16% 93%);
+  --color-input: hsl(210 16% 93%);
   --color-ring: hsl(216 100% 40%);
-  --radius-lg: 3px;
-  --radius-md: 2px;
-  --radius-sm: 1px;
+  --radius-lg: 12px;
+  --radius-md: 8px;
+  --radius-sm: 4px;
 }
 
 @layer base {
   *, ::after, ::before {
-    @apply border-slate-200 outline-green-500/50;
+    @apply border-border outline-primary/30;
   }
   body {
-    @apply bg-background text-foreground antialiased;
-    font-family: 'Inter', system-ui, sans-serif;
+    @apply bg-background text-foreground antialiased selection:bg-primary/10 selection:text-primary;
+    font-family: inherit;
   }
 }
 
 @layer components {
-  /* Legacy layout classes */
-  .app-frame {
-    display: grid;
-    grid-template-columns: var(--sidebar-width, 260px) 1fr;
-    min-height: 100vh;
-    transition: grid-template-columns 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  /* Sidepanel specific styles */
+  .sidebar-icon {
+    @apply h-10 w-10 flex items-center justify-center rounded-xl text-slate-500 hover:text-primary hover:bg-white transition-all cursor-pointer;
+  }
+  .sidebar-icon.active {
+    @apply text-primary bg-white shadow-sm shadow-slate-200/50;
   }
 
-  .side-panel {
-    @apply bg-white border-r border-slate-200 sticky top-0 h-screen overflow-hidden flex flex-col p-6;
-    width: var(--sidebar-width, 260px);
-    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  /* Modern table styling */
+  .crm-table {
+    @apply w-full border-collapse bg-white;
+  }
+  .crm-table th {
+    @apply bg-white border-y border-border px-6 py-4 text-left text-[11px] font-bold text-slate-500 uppercase tracking-widest;
+  }
+  .crm-table td {
+    @apply border-b border-border px-6 py-5 text-sm text-slate-700 transition-colors;
+  }
+  .crm-table tr:hover td {
+    @apply bg-slate-50/50;
   }
 
-  /* Status pills with standard Tailwind */
-  .status-pill {
-    @apply inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold;
+  /* Badge/Tag styling - Freshsales inspired */
+  .tag-badge {
+    @apply inline-flex items-center px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider;
   }
-  
-  .status-pill.completed, 
-  .status-pill.won,
-  .status-pill.qualified {
-    @apply bg-green-50 text-green-700;
-  }
-
-  .status-pill.new {
-    @apply bg-gray-50 text-gray-700;
-  }
-
-  .status-pill.lost {
-    @apply bg-red-50 text-red-700;
-  }
+  .tag-badge.low-value { @apply bg-red-50 text-red-600; }
+  .tag-badge.high-value { @apply bg-purple-50 text-purple-600; }
+  .tag-badge.small-business { @apply bg-orange-50 text-orange-600; }
+  .tag-badge.enterprise { @apply bg-yellow-50 text-yellow-700; }
+  .tag-badge.mid-market { @apply bg-blue-50 text-blue-600; }
 }
+

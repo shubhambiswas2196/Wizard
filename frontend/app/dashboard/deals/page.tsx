@@ -1,6 +1,17 @@
 import { proxyToDjango } from "@/lib/django";
 import { redirect } from "next/navigation";
-import { Briefcase, Plus, TrendingUp, BarChart3, Filter, MoreHorizontal, DollarSign, CheckCircle, LayoutGrid, List } from "lucide-react";
+import { 
+  IconBriefcase, 
+  IconPlus, 
+  IconTrendingUp, 
+  IconChartBar, 
+  IconFilter, 
+  IconDots, 
+  IconCurrencyDollar, 
+  IconCircleCheck, 
+  IconLayoutGrid, 
+  IconList 
+} from "@tabler/icons-react";
 import { 
   Table, 
   TableBody, 
@@ -20,10 +31,15 @@ import { PaginationControls } from "@/components/ui/pagination-controls";
 import { KanbanBoard } from "@/components/deals/kanban-board";
 
 async function getDeals(page: number = 1) {
-  const response = await proxyToDjango(`/crm/api/deals/?page=${page}`);
-  if (response.status === 401) redirect("/login");
-  if (!response.ok) return { count: 0, results: [], total_value: 0, avg_value: 0 };
-  return response.json();
+  try {
+    const response = await proxyToDjango(`/crm/api/deals/?page=${page}`);
+    if (response.status === 401) redirect("/login");
+    if (!response.ok) return { count: 0, results: [], total_value: 0, avg_value: 0 };
+    return response.json();
+  } catch (err) {
+    console.error("[DealsPage] Failed to fetch deals data:", err);
+    return { count: 0, results: [], total_value: 0, avg_value: 0 };
+  }
 }
 
 export default async function DealsPage({ 
@@ -65,7 +81,7 @@ export default async function DealsPage({
         <Card className="border-slate-100 shadow-sm overflow-hidden border-l-4 border-l-green-500 rounded-3xl">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-xs font-bold text-slate-400 uppercase tracking-widest">Pipeline Value</CardTitle>
-            <DollarSign className="h-4 w-4 text-green-500" />
+            <IconCurrencyDollar className="h-4 w-4 text-green-500" />
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-black text-slate-900">${totalValue.toLocaleString()}</div>
@@ -76,7 +92,7 @@ export default async function DealsPage({
         <Card className="border-slate-100 shadow-sm rounded-3xl">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-xs font-bold text-slate-400 uppercase tracking-widest">Avg Deal Size</CardTitle>
-            <TrendingUp className="h-4 w-4 text-blue-500" />
+            <IconTrendingUp className="h-4 w-4 text-blue-500" />
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-black text-slate-900">${avgValue.toLocaleString(undefined, { maximumFractionDigits: 0 })}</div>
@@ -89,7 +105,7 @@ export default async function DealsPage({
         <Card className="border-slate-100 shadow-sm bg-slate-900 border-0 rounded-3xl text-white">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-xs font-bold text-slate-400 uppercase tracking-widest">Conversion</CardTitle>
-            <Briefcase className="h-4 w-4 text-slate-500" />
+            <IconBriefcase className="h-4 w-4 text-slate-500" />
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-black italic">Scalable</div>
@@ -102,11 +118,11 @@ export default async function DealsPage({
         <div className="flex items-center justify-between mb-6">
            <TabsList className="bg-slate-100 p-1 rounded-2xl h-12 border border-slate-200 shadow-sm">
              <TabsTrigger value="pipeline" className="rounded-xl px-6 data-[state=active]:bg-white data-[state=active]:shadow-md font-bold flex gap-2">
-                <LayoutGrid size={18} />
+                <IconLayoutGrid size={18} />
                 Pipeline View
              </TabsTrigger>
              <TabsTrigger value="list" className="rounded-xl px-6 data-[state=active]:bg-white data-[state=active]:shadow-md font-bold flex gap-2">
-                <List size={18} />
+                <IconList size={18} />
                 List View
              </TabsTrigger>
            </TabsList>
@@ -135,7 +151,7 @@ export default async function DealsPage({
                     <TableCell className="py-4 pl-6">
                        <Link href={`/dashboard/deals/${deal.id}`} className="block group/link">
                           <div className="font-bold text-slate-900 group-hover/link:text-green-600 transition-colors">{deal.name}</div>
-                          <div className="text-[10px] text-slate-400 mt-0.5 font-bold uppercase tracking-tight">Enterprise licensing</div>
+                           <div className="text-[10px] text-slate-400 mt-0.5 font-bold uppercase tracking-tight">Enterprise licensing</div>
                        </Link>
                     </TableCell>
                     <TableCell className="py-4 text-slate-600 font-semibold">{deal.lead_name}</TableCell>

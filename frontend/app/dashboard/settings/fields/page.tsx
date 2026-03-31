@@ -1,15 +1,15 @@
 import { proxyToDjango } from "@/lib/django";
 import { redirect } from "next/navigation";
 import { 
-  Plus, 
-  Settings2, 
-  Type, 
-  Hash, 
-  Calendar, 
-  CheckSquare, 
-  Trash2,
-  AlertCircle
-} from "lucide-react";
+  IconPlus,
+  IconSettings, 
+  IconTypography, 
+  IconHash, 
+  IconCalendar, 
+  IconCheckbox, 
+  IconTrash,
+  IconAlertCircle
+} from "@tabler/icons-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -38,11 +38,11 @@ export default async function CustomFieldsSettingsPage() {
 
   const getIcon = (type: string) => {
     switch (type) {
-      case 'TEXT': return <Type size={16} />;
-      case 'NUMBER': return <Hash size={16} />;
-      case 'DATE': return <Calendar size={16} />;
-      case 'CHECKBOX': return <CheckSquare size={16} />;
-      default: return <Settings2 size={16} />;
+      case 'TEXT': return <IconTypography size={16} />;
+      case 'NUMBER': return <IconHash size={16} />;
+      case 'DATE': return <IconCalendar size={16} />;
+      case 'CHECKBOX': return <IconCheckbox size={16} />;
+      default: return <IconSettings size={16} />;
     }
   };
 
@@ -94,7 +94,7 @@ export default async function CustomFieldsSettingsPage() {
                             <div className="flex items-center gap-2 text-slate-600">
                                <div className="h-8 w-8 bg-slate-100 rounded-lg flex items-center justify-center text-slate-500">
                                   {getIcon(field.field_type)}
-                               </div>
+                                </div>
                                <span className="text-sm font-medium uppercase tracking-tight">{field.field_type}</span>
                             </div>
                          </TableCell>
@@ -108,7 +108,7 @@ export default async function CustomFieldsSettingsPage() {
                          </TableCell>
                          <TableCell className="text-right py-4 pr-6">
                             <Button variant="ghost" size="icon" className="text-slate-300 hover:text-red-500 hover:bg-red-50 transition-colors">
-                               <Trash2 size={18} />
+                               <IconTrash size={18} />
                             </Button>
                          </TableCell>
                       </TableRow>
@@ -118,7 +118,7 @@ export default async function CustomFieldsSettingsPage() {
                          <TableCell colSpan={5} className="h-48 text-center p-8">
                             <div className="flex flex-col items-center justify-center gap-3 text-slate-400">
                                <div className="h-16 w-16 bg-slate-50 rounded-full flex items-center justify-center border border-dashed border-slate-200 mb-2">
-                                  <Plus size={32} />
+                                  <IconPlus size={32} />
                                </div>
                                <p className="max-w-[200px] text-sm font-medium">No custom fields defined yet. Start by adding one above.</p>
                             </div>
@@ -131,7 +131,7 @@ export default async function CustomFieldsSettingsPage() {
         </Card>
 
         <div className="bg-amber-50 border border-amber-200 rounded-2xl p-6 flex items-start gap-4">
-           <AlertCircle className="text-amber-600 mt-1" size={20} />
+           <IconAlertCircle className="text-amber-600 mt-1" size={20} />
            <div>
               <h4 className="text-amber-900 font-bold text-sm">Pro Tip: Schema Consistency</h4>
               <p className="text-amber-800 text-xs mt-1 leading-relaxed">

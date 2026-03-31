@@ -25,9 +25,9 @@ export default function LoginPage() {
             <AuthForm mode="login" />
             <div className="mt-8 text-center">
                 <p className="text-sm text-slate-500">
-                    Don't have an account yet? 
+                    Don&apos;t have an account yet? 
                     <Link href="/signup" className="text-green-600 font-bold ml-1 hover:underline underline-offset-4">
-                        Create one for your company
+                   Let&apos;s get you back in for some more high performance selling!
                     </Link>
                 </p>
             </div>

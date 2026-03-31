@@ -1,17 +1,17 @@
 import { proxyToDjango } from "@/lib/django";
 import { redirect, notFound } from "next/navigation";
 import { 
-  Briefcase, 
-  DollarSign, 
-  TrendingUp, 
-  Calendar, 
-  User, 
-  ArrowLeft,
-  CheckCircle2,
-  AlertCircle,
-  BarChart3,
-  Rocket
-} from "lucide-react";
+  IconBriefcase, 
+  IconCurrencyDollar, 
+  IconTrendingUp, 
+  IconCalendar, 
+  IconUser, 
+  IconArrowLeft,
+  IconCircleCheck,
+  IconAlertCircle,
+  IconChartBar,
+  IconRocket
+} from "@tabler/icons-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -20,11 +20,16 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 
 async function getDeal(id: string) {
-  const response = await proxyToDjango(`/crm/api/deals/${id}/`);
-  if (response.status === 401) redirect("/login");
-  if (response.status === 404) return null;
-  if (!response.ok) return null;
-  return response.json();
+  try {
+    const response = await proxyToDjango(`/crm/api/deals/${id}/`);
+    if (response.status === 401) redirect("/login");
+    if (response.status === 404) return null;
+    if (!response.ok) return null;
+    return response.json();
+  } catch (err) {
+    console.error("[DealDetail] Failed to fetch deal data:", err);
+    return null;
+  }
 }
 
 const STAGES = [
@@ -35,7 +40,7 @@ const STAGES = [
   { id: 'CLOSING', label: 'Closing' }
 ];
 
-export default async function DealDetailPage({ params }: { params: { id: string } }) {
+export default async function DealDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const deal = await getDeal(id);
   if (!deal) notFound();
@@ -48,7 +53,7 @@ export default async function DealDetailPage({ params }: { params: { id: string 
       <div className="flex items-center gap-4">
         <Link href="/dashboard/deals">
           <Button variant="ghost" size="icon" className="rounded-full hover:bg-slate-100">
-            <ArrowLeft size={20} />
+            <IconArrowLeft size={20} />
           </Button>
         </Link>
         <div className="flex-1">
@@ -121,13 +126,13 @@ export default async function DealDetailPage({ params }: { params: { id: string 
                               <p className="text-[10px] font-bold text-green-700 uppercase tracking-widest">Weighted Forecast</p>
                               <p className="text-xl font-black text-green-900">${weightedValue}</p>
                            </div>
-                           <TrendingUp size={24} className="text-green-500 opacity-50" />
+                           <IconTrendingUp size={24} className="text-green-500 opacity-50" />
                         </div>
                      </div>
                      <div className="grid gap-6">
                         <div className="flex items-center gap-4 group">
                            <div className="h-12 w-12 bg-slate-100 rounded-2xl flex items-center justify-center text-slate-500 group-hover:bg-green-100 group-hover:text-green-600 transition-colors">
-                              <Calendar size={22} />
+                              <IconCalendar size={22} />
                            </div>
                            <div>
                               <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.1em]">Target Closing</p>
@@ -136,7 +141,7 @@ export default async function DealDetailPage({ params }: { params: { id: string 
                         </div>
                         <div className="flex items-center gap-4 group">
                            <div className="h-12 w-12 bg-slate-100 rounded-2xl flex items-center justify-center text-slate-500 group-hover:bg-blue-100 group-hover:text-blue-600 transition-colors">
-                              <User size={22} />
+                              <IconUser size={22} />
                            </div>
                            <div>
                               <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.1em]">Relationship Owner</p>
@@ -179,14 +184,14 @@ export default async function DealDetailPage({ params }: { params: { id: string 
             <Card className="border-slate-200 shadow-xl rounded-[2.5rem] overflow-hidden bg-slate-900 text-white border-0 ring-4 ring-green-500/10">
                <CardHeader className="p-8">
                   <div className="flex items-center gap-2 mb-2 text-green-400">
-                     <Rocket size={20} />
+                     <IconRocket size={20} />
                      <span className="text-[10px] font-black uppercase tracking-[0.2em]">Strategy Assistant</span>
                   </div>
                   <CardTitle className="text-2xl font-black tracking-tight">Optimal Next Step</CardTitle>
                </CardHeader>
                <CardContent className="p-8 pt-0 space-y-6">
                   <div className="bg-white/5 rounded-3xl p-6 border border-white/10 backdrop-blur-md">
-                     <p className="text-sm font-medium leading-relaxed italic text-slate-300">"The current {STAGES[currentStageIndex]?.label} stage suggests a formal proposal presentation to clear the bottleneck."</p>
+                     <p className="text-sm font-medium leading-relaxed italic text-slate-300">&quot;The current {STAGES[currentStageIndex]?.label} stage suggests a formal proposal presentation to clear the bottleneck.&quot;</p>
                   </div>
                   <Button className="w-full bg-green-500 hover:bg-green-400 text-slate-900 font-black rounded-[1.2rem] h-14 tracking-tighter text-lg shadow-lg shadow-green-500/20 active:scale-95 transition-all">
                      ACTIVATE SEQUENCE
@@ -211,7 +216,7 @@ export default async function DealDetailPage({ params }: { params: { id: string 
                   <Separator className="bg-slate-100/50" />
                   <div className="flex justify-between items-center group">
                      <span className="text-sm text-slate-500 font-bold group-hover:text-slate-900 transition-colors">Compelling Event</span>
-                     <CheckCircle2 className="text-green-500" size={18} />
+                     <IconCircleCheck className="text-green-500" size={18} />
                   </div>
                </CardContent>
             </Card>

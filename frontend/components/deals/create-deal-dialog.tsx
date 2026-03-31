@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Plus, Briefcase, Loader2, AlertCircle, TrendingUp, Calendar, Info, Target, Layers } from "lucide-react";
+import { IconPlus, IconBriefcase, IconLoader2, IconAlertCircle, IconTrendingUp, IconCalendar, IconInfo, IconTarget, IconLayers } from "@tabler/icons-react";
 import { 
   Dialog, 
   DialogContent, 
@@ -100,14 +100,14 @@ export function CreateDealDialog() {
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
                 <Button className="rounded-2xl h-12 px-6 bg-slate-900 text-white hover:bg-slate-800 font-bold shadow-lg shadow-black/20 gap-2 transition-all active:scale-95 group">
-                    <Plus size={18} className="group-hover:rotate-90 transition-transform duration-300" />
+                    <IconPlus size={18} className="group-hover:rotate-90 transition-transform duration-300" />
                     New Opportunity
                 </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[550px] rounded-[2.5rem] p-10 border-slate-100 shadow-2xl max-h-[90vh] overflow-y-auto scrollbar-hide">
                 <DialogHeader className="mb-6">
                     <div className="h-14 w-14 bg-slate-950 rounded-3xl flex items-center justify-center text-white mb-6 mx-auto shadow-xl ring-8 ring-slate-50">
-                       <Briefcase size={28} />
+                       <IconBriefcase size={28} />
                     </div>
                     <DialogTitle className="text-3xl font-black text-center tracking-tight">Create Opportunity</DialogTitle>
                     <DialogDescription className="text-center text-slate-500 mt-2 font-medium">
@@ -146,7 +146,7 @@ export function CreateDealDialog() {
                             <div className="space-y-2">
                                 <Label htmlFor="value" className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-1">Deal Value ($)</Label>
                                 <div className="relative">
-                                    <TrendingUp className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
+                                    <IconTrendingUp className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
                                     <Input 
                                         id="value" 
                                         name="value" 
@@ -161,7 +161,7 @@ export function CreateDealDialog() {
 
                         <div className="pt-6 border-t border-slate-100 space-y-6">
                             <div className="flex items-center gap-2 mb-2">
-                               <Layers size={16} className="text-blue-500" />
+                               <IconLayersIntersect size={16} className="text-blue-500" />
                                <span className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Pipeline Metadata</span>
                             </div>
 
@@ -198,7 +198,7 @@ export function CreateDealDialog() {
                             <div className="space-y-2">
                                 <Label htmlFor="close_date" className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-1">Expected Close Date</Label>
                                 <div className="relative">
-                                    <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
+                                    <IconCalendar className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
                                     <Input 
                                         id="close_date" 
                                         name="close_date" 
@@ -212,7 +212,7 @@ export function CreateDealDialog() {
 
                     {error && (
                         <div className="p-4 bg-red-50 border border-red-100 text-red-600 rounded-3xl text-xs font-black flex items-center gap-3 animate-in slide-in-from-top-2">
-                            <AlertCircle size={16} />
+                            <IconAlertCircle size={16} />
                             {error}
                         </div>
                     )}
@@ -228,7 +228,7 @@ export function CreateDealDialog() {
                         >
                             {pending ? (
                                 <>
-                                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                                    <IconLoader2 className="mr-2 h-5 w-5 animate-spin" />
                                     Forecasting...
                                 </>
                             ) : "Secure Opportunity"}

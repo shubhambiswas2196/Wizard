@@ -3,20 +3,31 @@ import { proxyToDjango } from "@/lib/django";
 
 export async function GET(
     request: NextRequest,
-    { params }: { params: { path: string[] } }
+    { params }: { params: Promise<{ path: string[] }> }
 ) {
-    const { path } = await params;
-    const url = `/crm/api/${path.join("/")}/`;
-    const response = await proxyToDjango(url);
-    if (!response.ok) {
-        return NextResponse.json(await response.json(), { status: response.status });
+    try {
+        const { path } = await params;
+        const url = `/crm/api/${path.join("/")}/`;
+        const response = await proxyToDjango(url);
+        
+        const bodyText = await response.text();
+        let bodyData;
+        try {
+            bodyData = JSON.parse(bodyText);
+        } catch {
+            bodyData = { detail: bodyText || "Backend error (HTML response)" };
+        }
+
+        return NextResponse.json(bodyData, { status: response.status });
+    } catch (error: any) {
+        console.error(`[Proxy] GET Internal Error:`, error.message);
+        return NextResponse.json({ detail: "Internal proxy error" }, { status: 500 });
     }
-    return NextResponse.json(await response.json());
 }
 
 export async function POST(
     request: NextRequest,
-    { params }: { params: { path: string[] } }
+    { params }: { params: Promise<{ path: string[] }> }
 ) {
     try {
         const { path } = await params;

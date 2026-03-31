@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { MoreHorizontal, Plus, DollarSign, Target, Calendar } from "lucide-react";
+import { IconPlus, IconDots, IconCurrencyDollar, IconTarget, IconCalendar } from "@tabler/icons-react";
 import Link from "next/link";
 
 const STAGES = [

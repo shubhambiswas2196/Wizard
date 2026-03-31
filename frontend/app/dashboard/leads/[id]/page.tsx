@@ -1,21 +1,21 @@
 import { proxyToDjango } from "@/lib/django";
 import { redirect, notFound } from "next/navigation";
 import { 
-  Users, 
-  Mail, 
-  Phone, 
-  Building2, 
-  Calendar, 
-  Clock, 
-  MessageSquare, 
-  FileText,
-  BadgeCent,
-  ArrowLeft,
-  Info,
-  Layers,
-  CheckCircle2,
-  XCircle
-} from "lucide-react";
+  IconUsers, 
+  IconMail, 
+  IconPhone, 
+  IconBuilding, 
+  IconCalendar, 
+  IconClock, 
+  IconMessage, 
+  IconFileDescription,
+  IconCoin,
+  IconArrowLeft,
+  IconInfoCircle,
+  IconLayersIntersect,
+  IconCircleCheck,
+  IconCircleX
+} from "@tabler/icons-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -24,11 +24,16 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 
 async function getLead(id: string) {
-  const response = await proxyToDjango(`/crm/api/leads/${id}/`);
-  if (response.status === 401) redirect("/login");
-  if (response.status === 404) return null;
-  if (!response.ok) return null;
-  return response.json();
+  try {
+    const response = await proxyToDjango(`/crm/api/leads/${id}/`);
+    if (response.status === 401) redirect("/login");
+    if (response.status === 404) return null;
+    if (!response.ok) return null;
+    return response.json();
+  } catch (err) {
+    console.error("[LeadDetail] Failed to fetch lead data:", err);
+    return null;
+  }
 }
 
 async function getLeadDeals(leadId: string) {
@@ -43,7 +48,7 @@ async function getCustomFieldDefinitions() {
   return response.json();
 }
 
-export default async function LeadDetailPage({ params }: { params: { id: string } }) {
+export default async function LeadDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const lead = await getLead(id);
   if (!lead) notFound();
@@ -57,7 +62,7 @@ export default async function LeadDetailPage({ params }: { params: { id: string 
     if (value === undefined || value === null || value === "") return <span className="text-slate-400 italic">Not set</span>;
     
     if (def.field_type === 'CHECKBOX') {
-        return value ? <CheckCircle2 className="text-green-500" size={18} /> : <XCircle className="text-slate-300" size={18} />;
+        return value ? <IconCircleCheck className="text-green-500" size={18} /> : <IconCircleX className="text-slate-300" size={18} />;
     }
     
     if (def.field_type === 'DATE') {
@@ -72,7 +77,7 @@ export default async function LeadDetailPage({ params }: { params: { id: string 
       <div className="flex items-center gap-4">
         <Link href="/dashboard/leads">
           <Button variant="ghost" size="icon" className="rounded-full hover:bg-slate-100">
-            <ArrowLeft size={20} />
+            <IconArrowLeft size={20} />
           </Button>
         </Link>
         <div>
@@ -82,7 +87,7 @@ export default async function LeadDetailPage({ params }: { params: { id: string 
               {lead.status}
             </Badge>
             <span className="text-slate-400 text-sm flex items-center gap-1">
-              <Clock size={14} />
+              <IconClock size={14} />
               Created {new Date(lead.created_at).toLocaleDateString()}
             </span>
           </div>
@@ -100,7 +105,7 @@ export default async function LeadDetailPage({ params }: { params: { id: string 
                   <div className="space-y-6">
                      <div className="flex items-start gap-3">
                         <div className="h-9 w-9 bg-slate-100 rounded-xl flex items-center justify-center text-slate-500">
-                           <Mail size={18} />
+                           <IconMail size={18} />
                         </div>
                         <div>
                            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Email Address</p>
@@ -109,7 +114,7 @@ export default async function LeadDetailPage({ params }: { params: { id: string 
                      </div>
                      <div className="flex items-start gap-3">
                         <div className="h-9 w-9 bg-slate-100 rounded-xl flex items-center justify-center text-slate-500">
-                           <Phone size={18} />
+                           <IconPhone size={18} />
                         </div>
                         <div>
                            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Phone Number</p>
@@ -120,7 +125,7 @@ export default async function LeadDetailPage({ params }: { params: { id: string 
                   <div className="space-y-6">
                      <div className="flex items-start gap-3">
                         <div className="h-9 w-9 bg-slate-100 rounded-xl flex items-center justify-center text-slate-500">
-                           <Building2 size={18} />
+                           <IconBuilding size={18} />
                         </div>
                         <div>
                            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Associated Company</p>
@@ -129,7 +134,7 @@ export default async function LeadDetailPage({ params }: { params: { id: string 
                      </div>
                      <div className="flex items-start gap-3">
                         <div className="h-9 w-9 bg-slate-100 rounded-xl flex items-center justify-center text-slate-500">
-                           <Calendar size={18} />
+                           <IconCalendar size={18} />
                         </div>
                         <div>
                            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Lead Source</p>
@@ -145,7 +150,7 @@ export default async function LeadDetailPage({ params }: { params: { id: string 
              <Card className="border-slate-200 shadow-sm rounded-3xl overflow-hidden">
                 <CardHeader className="bg-slate-50/50 border-b border-slate-100 p-6 flex flex-row items-center gap-3">
                    <div className="h-8 w-8 bg-purple-100 rounded-lg flex items-center justify-center text-purple-600">
-                      <Layers size={18} />
+                      <IconLayersIntersect size={18} />
                    </div>
                    <div>
                       <CardTitle className="text-lg font-bold">Additional Attributes</CardTitle>
@@ -179,9 +184,9 @@ export default async function LeadDetailPage({ params }: { params: { id: string 
                   <div className="absolute left-9 top-8 bottom-8 w-px bg-slate-100" />
                   <div className="space-y-8">
                      {[
-                        { title: 'Inquiry received', desc: 'Initial contact via web portal regarding enterprise licensing.', date: 'Dec 12, 11:20 AM', icon: FileText, color: 'blue' },
-                        { title: 'Discovery call', desc: 'Discussed requirements for the wizard integration. Lead is highly interested.', date: 'Dec 14, 02:00 PM', icon: MessageSquare, color: 'green' },
-                        { title: 'Deal created', desc: 'Revenue opportunity added to the pipeline.', date: 'Dec 15, 09:30 AM', icon: BadgeCent, color: 'purple' },
+                        { title: 'Inquiry received', desc: 'Initial contact via web portal regarding enterprise licensing.', date: 'Dec 12, 11:20 AM', icon: IconFileDescription, color: 'blue' },
+                        { title: 'Discovery call', desc: 'Discussed requirements for the wizard integration. Lead is highly interested.', date: 'Dec 14, 02:00 PM', icon: IconMessage, color: 'green' },
+                        { title: 'Deal created', desc: 'Revenue opportunity added to the pipeline.', date: 'Dec 15, 09:30 AM', icon: IconCoin, color: 'purple' },
                      ].map((item, index) => (
                         <div key={index} className="flex gap-6 relative">
                            <div className={cn("h-10 w-10 shrink-0 rounded-2xl flex items-center justify-center shadow-sm z-10", `bg-slate-50 text-slate-600`)}>
@@ -231,7 +236,7 @@ export default async function LeadDetailPage({ params }: { params: { id: string 
            <Card className="border-slate-200 shadow-sm rounded-3xl overflow-hidden bg-green-600 border-0 text-white">
               <CardContent className="p-6 text-center space-y-4">
                  <div className="h-14 w-14 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-2 backdrop-blur-sm">
-                    <Users size={24} className="text-white" />
+                    <IconUsers size={24} className="text-white" />
                  </div>
                  <h3 className="font-bold text-xl">Quick Actions</h3>
                  <div className="grid grid-cols-2 gap-3">

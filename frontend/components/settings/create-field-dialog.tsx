@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Plus, Settings2, Loader2, Info } from "lucide-react";
+import { IconPlus, IconSettings, IconLoader2, IconInfoCircle, IconAlertCircle } from "@tabler/icons-react";
 import { 
   Dialog, 
   DialogContent, 
@@ -71,14 +71,14 @@ export function CreateFieldDialog() {
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
                 <Button className="rounded-2xl h-12 px-6 bg-purple-600 hover:bg-purple-700 font-bold shadow-lg shadow-purple-600/20 gap-2">
-                    <Plus size={18} />
+                    <IconPlus size={18} />
                     Define New Field
                 </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[450px] rounded-3xl p-8 border-slate-100 shadow-2xl">
                 <DialogHeader className="mb-4">
                     <div className="h-12 w-12 bg-purple-50 rounded-2xl flex items-center justify-center text-purple-600 mb-4 mx-auto">
-                       <Settings2 size={24} />
+                       <IconSettings size={24} />
                     </div>
                     <DialogTitle className="text-2xl font-bold text-center">Customize Your Schema</DialogTitle>
                     <DialogDescription className="text-center text-slate-500 mt-2">
@@ -96,7 +96,7 @@ export function CreateFieldDialog() {
                             required 
                         />
                         <p className="text-[10px] text-slate-400 font-medium ml-1 flex items-center gap-1 uppercase tracking-tight">
-                            <Info size={10} />
+                            <IconInfoCircle size={10} />
                             API name will be auto-generated
                         </p>
                     </div>
@@ -132,7 +132,7 @@ export function CreateFieldDialog() {
 
                     {error && (
                         <div className="p-3 bg-red-50 border border-red-100 text-red-600 rounded-2xl text-xs font-bold flex items-center gap-2 animate-in slide-in-from-top-2">
-                            <AlertCircle size={14} />
+                            <IconAlertCircle size={14} />
                             {error}
                         </div>
                     )}
@@ -145,7 +145,7 @@ export function CreateFieldDialog() {
                         >
                             {pending ? (
                                 <>
-                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                    <IconLoader2 className="mr-2 h-4 w-4 animate-spin" />
                                     Defining Schema...
                                 </>
                             ) : "Create Custom Field"}
@@ -156,5 +156,3 @@ export function CreateFieldDialog() {
         </Dialog>
     );
 }
-
-import { AlertCircle } from "lucide-react";

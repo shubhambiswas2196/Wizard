@@ -2,7 +2,7 @@
 
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { useDebouncedCallback } from "use-debounce";
-import { Search, X, Loader2 } from "lucide-react";
+import { IconSearch, IconX, IconLoader2 } from "@tabler/icons-react";
 import { Input } from "@/components/ui/input";
 import { useState, useEffect } from "react";
 
@@ -43,9 +43,9 @@ export function LeadsSearch() {
     <div className="relative w-full max-w-md group">
       <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-green-600 transition-colors">
         {isSearching ? (
-          <Loader2 size={18} className="animate-spin text-green-500" />
+          <IconLoader2 size={18} className="animate-spin text-green-500" />
         ) : (
-          <Search size={18} />
+          <IconSearch size={18} />
         )}
       </div>
       <Input
@@ -60,7 +60,7 @@ export function LeadsSearch() {
           onClick={clearSearch}
           className="absolute right-3 top-1/2 -translate-y-1/2 h-7 w-7 rounded-lg hover:bg-slate-100 flex items-center justify-center text-slate-400 hover:text-slate-600 transition-all"
         >
-          <X size={16} />
+          <IconX size={16} />
         </button>
       )}
     </div>
