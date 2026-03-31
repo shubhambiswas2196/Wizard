@@ -1,0 +1,28 @@
+# Python / Django
+__pycache__/
+*.py[cod]
+*$py.class
+*.sqlite3
+db.sqlite3
+.env
+venv/
+env/
+.venv/
+auth-app/
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+build/
+.DS_Store
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnp.*
+.vercel/
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
